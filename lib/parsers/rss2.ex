@@ -21,10 +21,16 @@ defmodule ElixirRss.Parsers.RSS2 do
       image_thumbnail: ~x'./media:thumbnail/@url's,
       image_content: ~x'./media:*/@url's,
       image_bnmedia: ~x'./bnmedia:post-thumbnail/bnmedia:url/text()'s,
+      image_tokenomy: ~x'./content:encoded/text()'s |> transform_by(&strip/1),
       encoded_content: ~x'./content:encoded/text()'s |> transform_by(&strip/1),
       updated: ~x'./pubDate/text()'s |> transform_by(&parse_date/1)
     ]
   ]
+
+  def get_tokenomy_image(target) do
+    target
+    |> xpath(~x'img/@src's)
+  end
 
   def valid?(doc) do
     doc |> xpath(~x"/rss"e) != nil
@@ -138,10 +144,13 @@ defmodule ElixirRss.Parsers.RSS2 do
   end
 
   defp get_entry_image(entry) do
+    IO.inspect(entry)
+
     cond do
       "" != entry.image_thumbnail -> entry.image_thumbnail
       "" != entry.image_content -> entry.image_content
       "" != entry.image_bnmedia -> entry.image_bnmedia
+      "" != entry.image_tokenomy -> entry.image_tokenomy |> get_tokenomy_image()
       true -> ""
     end
   end
