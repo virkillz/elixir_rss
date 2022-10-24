@@ -35,7 +35,8 @@ defmodule ElixirRss.MixProject do
       {:html_sanitize_ex, "~> 1.4"},
       {:httpoison, "~> 1.8"},
       {:sweet_xml, "~> 0.7.1"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 3.7"},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
 end
